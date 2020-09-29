@@ -1,7 +1,7 @@
 {
     "name": "lyb/luosimao",
     "description": "https://www.luosimao.com/",
-    "type": "metapackage",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
