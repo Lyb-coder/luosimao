@@ -14,13 +14,6 @@
             "Tool\\Luosimao\\": "src/"
         }
     },
-    "extra":{
-        "think": {
-            "config":{
-                "tool_lsm_sms": "src/config.php"
-            }
-        }
-    },
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.1.0"
