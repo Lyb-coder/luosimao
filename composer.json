@@ -1,0 +1,28 @@
+{
+    "name": "lyb/luosimao",
+    "description": "https://www.luosimao.com/",
+    "type": "metapackage",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "吕亚斌",
+            "email": "mail@lvyabin.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Tool\\Luosimao\\": "src/"
+        }
+    },
+    "extra":{
+        "think": {
+            "config":{
+                "tool_lsm_sms": "src/config.php"
+            }
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.1.0"
+    }
+}
