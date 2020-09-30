@@ -6,7 +6,11 @@ $config = [
         //场景
         'scene' => 'login',
         //缓存方法配置
-        'cache' => null
+        'cache' => function(string $name = null, $value = '', $options = null, $tag = null){
+            if (function_exists('cache')){
+                return cache($name,$value,$options,$tag);
+            }
+        }
     ],
     //短信配置
     'sms' => [
@@ -40,13 +44,7 @@ $config = [
         // 验证码位数
         'length' => 6,
         // 验证码类型
-        'type' => 1,
-        //缓存方法配置
-        'cache' => function(string $name = null, $value = '', $options = null, $tag = null){
-            if (function_exists('cache')){
-                return cache($name,$value,$options,$tag);
-            }
-        }
+        'type' => 1
     ]
 ];
 
