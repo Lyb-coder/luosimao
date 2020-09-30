@@ -1,6 +1,6 @@
 {
     "name": "lyb/luosimao",
-    "description": "https://www.luosimao.com/",
+    "description": "集成Luosimao的短信发送并适配于Thinkphp6.0框架的composer包",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -21,7 +21,7 @@
             }
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": ">=7.1.0"
     }

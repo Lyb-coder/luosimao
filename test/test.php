@@ -11,7 +11,7 @@ $config = [
     //短信配置
     'sms' => [
         //Luosimao 的key后台获取
-        'api_key'       => 'jksdhfasdfhskjadfhskdhfaksdf',
+        'api_key'       => 'faff3sadfklasdjfksdjflsjldfj4e731cfe',
         //返回类型支持json｜xml
         'format'        => 'json',
         //send:发送单条短信 （验证码、触发类）send_batch:批量发送(通知，提醒类) status:账户信息(余额查询)
@@ -27,7 +27,7 @@ $config = [
         //模版信息
         'template' => [
             'register' => '验证码：*code*，用于手机注册，10分钟内有效。验证码提供给他人可能导致帐号被盗，请勿泄露，谨防被骗。',
-            'login' => '验证码：*code*，用于手机登录，半小时内有效。验证码提供给他人可能导致帐号被盗，请勿泄露，谨防被骗。',
+            'login' => '验证码：*code*，用于手机登录，10分钟内有效。验证码提供给他人可能导致帐号被盗，请勿泄露，谨防被骗。',
             'new_password' => '验证码：*code*，用于修改密码，10分钟内有效。验证码提供给他人可能导致帐号被盗，请勿泄露，谨防被骗。',
         ],
     ],
@@ -49,20 +49,15 @@ $config = [
         }
     ]
 ];
-/**
- * 单独发送
- */
-$sms = new \Tool\Luosimao\Sms\Sms($config);
-//$sms = $sms->setMobileNumber(15111111111)
-//    ->setMessage([
-//        '*code*' => 123456
-//    ])
+
+$sms = (new \Tool\Luosimao\Sms\Sms($config))
+//    ->setSmsConfig('send_type','send')
+//    ->setMobileNumber(15111441767)
 //    ->Send();
-$sms = $sms->setMobileNumbers([15011441767,15011441767])
-    ->setMessages([
-        ['*code*' => 123456],
-        ['*code*' => 223456]
-    ])
-    ->SendBatch();
+//    ->setSmsConfig('send_type','send_batch')
+//    ->setMobileNumbers(['15222441767','15333441767'])
+//    ->SendBatch();
+    ->setSmsConfig('send_type','status')
+    ->GetDeposit();
 print_r($sms);
 

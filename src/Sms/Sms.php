@@ -35,17 +35,13 @@ class Sms extends Client
      */
     protected $mobileNumber;
     /**
-     * @var string 手机号发送的短信信息
-     */
-    protected $message;
-    /**
      * @var array 批量手机号
      */
     protected $mobileNumbers;
     /**
-     * @var string 批量手机号发送的短信信息
+     * @var string 手机号发送的短信信息
      */
-    protected $messages = null;
+    protected $message;
     /**
      * 短信接口地址
      */
@@ -68,7 +64,6 @@ class Sms extends Client
             throw new \Exception('api_key不能为空');
         }
 
-        $this->Url = "{$this->sms_config['scheme']}://{$this->sms_config['api_domain']}{$this->sms_config['send_type']}.{$this->sms_config['format']}";
 
     }
 
@@ -105,22 +100,20 @@ class Sms extends Client
         return $this;
     }
     /**
-     * 短信内容设置
-     * @param array $replaces
+     * 批量手机号设置
+     * @param array $mobileNumbers
      */
-    public function setMessages(array $replaces)
+    public function setSmsConfig($keys,$vals)
     {
-        $template = $this->sms_config['template'][$this->common_config['scene']];
-        foreach ($replaces as $replace) {
-            foreach ($replace as $k => $v) {
-                $template = str_replace($k, $v, $template);
-            }
-            $this->messages[] = $template . $this->sms_config['sign'];
-        }
-
+        $this->sms_config[$keys] = $vals;
         return $this;
     }
-    //触发，单发，适用于验证码，订单触发提醒类
+
+    /**
+     * 触发，单发，适用于验证码，订单触发提醒类
+     * @return mixed
+     * @throws \Exception
+     */
     public function Send()
     {
         if (!$this->isTell($this->mobileNumber)) {
@@ -130,20 +123,21 @@ class Sms extends Client
             'mobile' => $this->mobileNumber,
             'message' => $this->message,
         );
-        $res = $this->Request($this->Url, $param);
+        $res = $this->Request($param);
         return @json_decode($res, true);
     }
 
     //批量发送，用于大批量发送
-    public function SendBatch($mobile_list = array(), $message = array(), $time = '')
+    public function SendBatch($time = '')
     {
-        $mobile_list = is_array($mobile_list) ? implode(',', $mobile_list) : $mobile_list;
+        $this->mobileNumbers = is_array($this->mobileNumbers) ? implode(',', $this->mobileNumbers) : $this->mobileNumbers;
+
         $param = array(
-            'mobile_list' => $mobile_list,
-            'message' => $message,
+            'mobile_list' => $this->mobileNumbers,
+            'message' => $this->message,
             'time' => $time,
         );
-        $res = $this->Request($this->Url, $param);
+        $res = $this->Request($param);
         return @json_decode($res, true);
     }
 
@@ -178,22 +172,23 @@ class Sms extends Client
      * @param int $timeout 超时时间
      * @return bool
      */
-    private function Request($api_url = '', $param = array(), $timeout = 5)
+    private function Request( $param = array(), $timeout = 5)
     {
+        $this->Url = "{$this->sms_config['scheme']}://{$this->sms_config['api_domain']}{$this->sms_config['send_type']}.{$this->sms_config['format']}";
 
-        if (!$api_url) {
+        if (!$this->Url) {
             throw new \Exception('url不能为空');
         }
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $api_url);
+        curl_setopt($ch, CURLOPT_URL, $this->Url);
 
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
 
-        if (parse_url($api_url)['scheme'] == 'https') {
+        if (parse_url($this->Url)['scheme'] == 'https') {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -209,6 +204,7 @@ class Sms extends Client
         curl_close($ch);
         if ($error) {
             $this->LastError[] = $error;
+            print_r($error);
             return false;
         }
         return $res;
